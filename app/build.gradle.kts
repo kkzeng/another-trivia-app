@@ -52,8 +52,13 @@ android {
 }
 
 dependencies {
-    implementation("com.google.dagger:hilt-android:2.44")
-    kapt("com.google.dagger:hilt-android-compiler:2.44")
+    val retroFitVersion = "2.9.0"
+    val daggerHiltVersion = "2.44"
+
+    implementation("com.squareup.retrofit2:converter-gson:$retroFitVersion")
+    implementation("com.squareup.retrofit2:retrofit:$retroFitVersion")
+    implementation("com.google.dagger:hilt-android:$daggerHiltVersion")
+    kapt("com.google.dagger:hilt-android-compiler:$daggerHiltVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
     implementation("androidx.core:core-ktx:1.10.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
