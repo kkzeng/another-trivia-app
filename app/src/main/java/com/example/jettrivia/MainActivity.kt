@@ -10,8 +10,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jettrivia.ui.theme.JetTriviaTheme
+import com.example.jettrivia.ui.viewmodels.QuestionsViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,7 +26,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Android")
+                    TriviaHome()
                 }
             }
         }
@@ -30,17 +34,19 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
+fun TriviaHome(viewModel: QuestionsViewModel = hiltViewModel()) {
+    Question(viewModel = viewModel)
 }
 
-@Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
-    JetTriviaTheme {
-        Greeting("Android")
+fun Question(viewModel: QuestionsViewModel) {
+    // ArrayList must be converted to MutableList for Composition
+    // TODO: Try to remove toMutableList() to see if Composition occurs properly
+    val questions = viewModel.data.value.data?.toMutableList()
+    if (viewModel.data.value.isLoading) {
+        // Something
+    }
+    else {
+
     }
 }

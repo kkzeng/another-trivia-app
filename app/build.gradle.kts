@@ -55,6 +55,7 @@ dependencies {
     val retroFitVersion = "2.9.0"
     val daggerHiltVersion = "2.44"
 
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
     implementation("com.squareup.retrofit2:converter-gson:$retroFitVersion")
     implementation("com.squareup.retrofit2:retrofit:$retroFitVersion")
     implementation("com.google.dagger:hilt-android:$daggerHiltVersion")
