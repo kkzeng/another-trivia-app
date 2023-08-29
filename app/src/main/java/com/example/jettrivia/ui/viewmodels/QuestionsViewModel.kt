@@ -2,6 +2,7 @@ package com.example.jettrivia.ui.viewmodels
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.jettrivia.data.QuestionRepository
@@ -15,9 +16,10 @@ class QuestionsViewModel @Inject constructor(private val repository: QuestionRep
     val currentQuestionIndex: MutableState<Int> = mutableStateOf(0)
     val selectedIndex: MutableState<Int> = mutableStateOf(-1)
     val score: MutableState<Int> = mutableStateOf(0)
-    val isLoading: MutableState<Boolean> = mutableStateOf(false)
     val questions: MutableState<List<QuestionItem>> = mutableStateOf(listOf())
+    val isLoading: MutableState<Boolean> = mutableStateOf(false)
     val isNextButtonVisible: MutableState<Boolean> = mutableStateOf(false)
+    val shouldScrollToBottom: MutableState<Boolean> = mutableStateOf(false)
 
     val finalAnswers: MutableList<Int> = mutableListOf()
 
@@ -38,13 +40,17 @@ class QuestionsViewModel @Inject constructor(private val repository: QuestionRep
         // Reset state
         selectedIndex.value = -1
         isNextButtonVisible.value = false
-        
+
         currentQuestionIndex.value += 1
     }
 
     fun handleAnswerClick(index: Int) {
         selectedIndex.value = index
         isNextButtonVisible.value = true
+        if (isCorrectAnswerSelected()) score.value += 1
+
+        // Indicates to UI that it should scroll to reveal the next button
+        shouldScrollToBottom.value = true
     }
 
     private fun fetchAllQuestions() {

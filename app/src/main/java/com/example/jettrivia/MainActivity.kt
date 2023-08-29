@@ -59,9 +59,6 @@ class MainActivity : ComponentActivity() {
             JetTriviaTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .verticalScroll(rememberScrollState()),
                     color = Color.LightGray
                 ) {
                     // TODO: Create a landing screen with some options

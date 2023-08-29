@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Clear
@@ -25,6 +27,7 @@ import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -64,9 +67,11 @@ fun QuestionText(text: String) {
 
 @Composable
 fun QuestionDisplay(viewModel: QuestionsViewModel) {
+    val scrollState = rememberScrollState()
     Surface(modifier = Modifier
         .fillMaxSize()
-        .padding(4.dp),
+        .padding(4.dp)
+        .verticalScroll(scrollState),
         color = Color.DarkGray
     ) {
         Column(modifier = Modifier.fillMaxWidth(),
@@ -88,10 +93,17 @@ fun QuestionDisplay(viewModel: QuestionsViewModel) {
 
             AnswerRadioButtons(choices = currentQuestion.choices, viewModel = viewModel)
 
-            // This is shown when user has answered the question correctly
             if (viewModel.isNextButtonVisible.value) {
                 NextQuestionButton(modifier = Modifier.align(Alignment.CenterHorizontally)) {
                     viewModel.handleNextButtonClick()
+                }
+
+                if (viewModel.shouldScrollToBottom.value) {
+                    // Scroll to bottom when button is visible
+                    LaunchedEffect(Unit) {
+                        scrollState.animateScrollTo(scrollState.maxValue)
+                        viewModel.shouldScrollToBottom.value = false
+                    }
                 }
             }
         }
@@ -112,7 +124,9 @@ fun AnswerRadioButtons(choices: List<String>, viewModel: QuestionsViewModel) {
             Row(modifier = Modifier
                 .height(optionHeight.dp)
                 .padding(top = optionPadding.dp, bottom = optionPadding.dp)
-                .clickable(enabled = !viewModel.isChoiceSelected()) { viewModel.handleAnswerClick(index) },
+                .clickable(enabled = !viewModel.isChoiceSelected(), onClick = {
+                    viewModel.handleAnswerClick(index)
+                }),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Start) {
                 RadioButton(
@@ -134,7 +148,8 @@ fun AnswerRadioButtons(choices: List<String>, viewModel: QuestionsViewModel) {
                     color = PurpleGrey80
                 )
                 if (viewModel.selectedIndex.value == index) {
-                    val iconModifier = Modifier.padding(start = 6.dp, end = 6.dp)
+                    val iconModifier = Modifier
+                        .padding(start = 6.dp, end = 6.dp)
                         .align(Alignment.CenterVertically)
                     if (viewModel.isCorrectAnswerSelected()) {
                         Icon(
