@@ -13,6 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class QuestionsViewModel @Inject constructor(private val repository: QuestionRepository): ViewModel() {
+    val index: MutableState<Int> = mutableStateOf(0)
     val data: MutableState<DataOrException<ArrayList<QuestionItem>, Exception>> =
         mutableStateOf(DataOrException())
 
@@ -24,6 +25,7 @@ class QuestionsViewModel @Inject constructor(private val repository: QuestionRep
         viewModelScope.launch {
             data.value.isLoading = true
             data.value = repository.getListOfQuestions()
+            data.value.data?.shuffle() // Randomize order of questions
         }
     }
 }
