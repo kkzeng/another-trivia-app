@@ -2,7 +2,6 @@ package com.example.jettrivia.di
 
 import com.example.jettrivia.constants.Constants
 import com.example.jettrivia.data.QuestionRepository
-import com.example.jettrivia.model.QuestionList
 import com.example.jettrivia.network.QuestionApi
 import dagger.Module
 import dagger.Provides
